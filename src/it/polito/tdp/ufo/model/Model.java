@@ -19,7 +19,7 @@ public class Model {
 	private SightingsDAO dao;
 	private SimpleDirectedGraph<StatiAvvistamenti, DefaultEdge> grafo;
 	private List<StatiAvvistamenti> ottima;
-	private List<StatiAvvistamenti> uscenti= new ArrayList<>();
+	
 	public Model() {
 		dao= new SightingsDAO();
 		grafo= new SimpleDirectedGraph<>(DefaultEdge.class);
@@ -52,12 +52,14 @@ public class Model {
 		return "Grafo greato:\nNumero di vertici: "+grafo.vertexSet().size()+"\nNumero di archi: "+grafo.edgeSet().size();
 	}
 	public String adiacentiEntrantiUscenti(StatiAvvistamenti sa) {
-		for(DefaultEdge de: grafo.outgoingEdgesOf(sa)) {
-			
-			uscenti.add(grafo.getEdgeTarget(de));
-		}
-		
 		String result= "stati prima: \n"+grafo.incomingEdgesOf(sa)+"\nstati dopo:"+"\n"+grafo.outgoingEdgesOf(sa);
+		return result;
+	}
+	public List<StatiAvvistamenti> uscenti(StatiAvvistamenti sa) {
+		List<StatiAvvistamenti> result= new ArrayList<>();
+		for(DefaultEdge de: grafo.outgoingEdgesOf(sa)) {
+			result.add(grafo.getEdgeTarget(de));
+		}
 		return result;
 	}
 	
@@ -80,15 +82,35 @@ public class Model {
 	}
 	private void ricorsione(List<StatiAvvistamenti> parziale) {
 		
-		for(StatiAvvistamenti s: this.uscenti) {
+		List<StatiAvvistamenti> prossimi= uscenti(parziale.get(parziale.size()-1));
+		for(StatiAvvistamenti s: prossimi) {
+			if(!parziale.contains(s)) {
 			parziale.add(s);
 			ricorsione(parziale);
-			parziale.remove(s);
+			parziale.remove(parziale.size()-1);
+			}
 			
 		}
 		if(ottima.size()<parziale.size()) {
 			ottima= new ArrayList<>(parziale);
-		}		
+		}
+		
+		
+//		List<String> candidati = this.getSuccessori(parziale.get(parziale.size()-1));
+//		for(String candidato : candidati) {
+//			if(!parziale.contains(candidato)) {
+//				//è un candidato che non ho ancora considerato
+//				parziale.add(candidato);
+//				this.cercaPercorso(parziale);
+//				parziale.remove(parziale.size()-1);
+//			}
+//		}
+//		
+//		
+//		//vedere se la soluzione corrente è migliore della ottima corrente
+//		if(parziale.size() > ottima.size()) {
+//			this.ottima = new LinkedList(parziale);
+//		}
 	}
 	
 }
