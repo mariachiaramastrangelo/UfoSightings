@@ -52,7 +52,7 @@ public class UfoController {
 
     @FXML
     void handleSequenza(ActionEvent event) {
-
+    	txtResult.appendText("\n"+ model.percorsoLungo(this.boxStato.getValue()));
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete

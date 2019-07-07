@@ -19,6 +19,7 @@ public class Model {
 	private SightingsDAO dao;
 	private SimpleDirectedGraph<StatiAvvistamenti, DefaultEdge> grafo;
 	private List<StatiAvvistamenti> ottima;
+	private List<StatiAvvistamenti> uscenti= new ArrayList<>();
 	public Model() {
 		dao= new SightingsDAO();
 		grafo= new SimpleDirectedGraph<>(DefaultEdge.class);
@@ -51,9 +52,15 @@ public class Model {
 		return "Grafo greato:\nNumero di vertici: "+grafo.vertexSet().size()+"\nNumero di archi: "+grafo.edgeSet().size();
 	}
 	public String adiacentiEntrantiUscenti(StatiAvvistamenti sa) {
+		for(DefaultEdge de: grafo.outgoingEdgesOf(sa)) {
+			
+			uscenti.add(grafo.getEdgeTarget(de));
+		}
+		
 		String result= "stati prima: \n"+grafo.incomingEdgesOf(sa)+"\nstati dopo:"+"\n"+grafo.outgoingEdgesOf(sa);
 		return result;
 	}
+	
 	public List<StatiAvvistamenti> trovaRaggiungibili(StatiAvvistamenti stato){
 		DepthFirstIterator<StatiAvvistamenti, DefaultEdge> dfi= new DepthFirstIterator<>(grafo, stato);
 		
@@ -65,21 +72,23 @@ public class Model {
 		}
 	
 	public List<StatiAvvistamenti> percorsoLungo(StatiAvvistamenti stato){
-		//ottima= new ArrayList<>();
+		ottima= new ArrayList<>();
 		List<StatiAvvistamenti> parziale= new ArrayList<>();
 		parziale.add(stato);
-		ricorsione(parziale, stato);
+		ricorsione(parziale);
 		return ottima;
 	}
-	private void ricorsione(List<StatiAvvistamenti> parziale, StatiAvvistamenti stato) {
+	private void ricorsione(List<StatiAvvistamenti> parziale) {
+		
+		for(StatiAvvistamenti s: this.uscenti) {
+			parziale.add(s);
+			ricorsione(parziale);
+			parziale.remove(s);
+			
+		}
 		if(ottima.size()<parziale.size()) {
 			ottima= new ArrayList<>(parziale);
-		}
-		Set<StatiAvvistamenti> statiSuccessivi= grafo.outgoingEdgesOf(stato);
-		for(StatiAvvistamenti s: statiSuccessivi) {
-			
-			
-		}
-				
+		}		
 	}
+	
 }
