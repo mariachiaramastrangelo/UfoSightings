@@ -18,7 +18,7 @@ public class Model {
 	
 	private SightingsDAO dao;
 	private SimpleDirectedGraph<StatiAvvistamenti, DefaultEdge> grafo;
-	
+	private List<StatiAvvistamenti> ottima;
 	public Model() {
 		dao= new SightingsDAO();
 		grafo= new SimpleDirectedGraph<>(DefaultEdge.class);
@@ -63,4 +63,23 @@ public class Model {
 			}
 		return  result;
 		}
+	
+	public List<StatiAvvistamenti> percorsoLungo(StatiAvvistamenti stato){
+		//ottima= new ArrayList<>();
+		List<StatiAvvistamenti> parziale= new ArrayList<>();
+		parziale.add(stato);
+		ricorsione(parziale, stato);
+		return ottima;
+	}
+	private void ricorsione(List<StatiAvvistamenti> parziale, StatiAvvistamenti stato) {
+		if(ottima.size()<parziale.size()) {
+			ottima= new ArrayList<>(parziale);
+		}
+		Set<StatiAvvistamenti> statiSuccessivi= grafo.outgoingEdgesOf(stato);
+		for(StatiAvvistamenti s: statiSuccessivi) {
+			
+			
+		}
+				
+	}
 }
