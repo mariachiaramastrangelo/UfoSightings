@@ -37,14 +37,17 @@ public class UfoController {
 
     @FXML
     void handleAnalizza(ActionEvent event) {
-    	txtResult.setText(model.adiacentiEntrantiUscenti(this.boxStato.getValue()));
-    	
+    	txtResult.appendText(model.adiacentiEntrantiUscenti(this.boxStato.getValue())+"\n");
+    	for(StatiAvvistamenti sa: model.trovaRaggiungibili(this.boxStato.getValue())) {
+    		txtResult.appendText(sa.toString()+"\n");
+    	}
     }
 
     @FXML
     void handleAvvistamenti(ActionEvent event) {
     	model.creaGrafo(this.boxAnno.getValue().getAnno());
     	this.boxStato.getItems().addAll(model.getStatiAvvistamenti(this.boxAnno.getValue().getAnno()));
+    	txtResult.appendText(model.grafoCreato()+"\n\n");
     }
 
     @FXML
