@@ -4,8 +4,13 @@
 
 package it.polito.tdp.ufo;
 
+import java.awt.Dialog.ModalExclusionType;
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import it.polito.tdp.ufo.model.AnniAvvistamenti;
+import it.polito.tdp.ufo.model.Model;
+import it.polito.tdp.ufo.model.StatiAvvistamenti;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -20,22 +25,26 @@ public class UfoController {
     private URL location;
 
     @FXML // fx:id="boxAnno"
-    private ComboBox<?> boxAnno; // Value injected by FXMLLoader
+    private ComboBox<AnniAvvistamenti> boxAnno; // Value injected by FXMLLoader
 
     @FXML // fx:id="boxStato"
-    private ComboBox<?> boxStato; // Value injected by FXMLLoader
+    private ComboBox<StatiAvvistamenti> boxStato; // Value injected by FXMLLoader
 
     @FXML // fx:id="txtResult"
     private TextArea txtResult; // Value injected by FXMLLoader
 
+	private Model model;
+
     @FXML
     void handleAnalizza(ActionEvent event) {
-
+    	txtResult.setText(model.adiacentiEntrantiUscenti(this.boxStato.getValue()));
+    	
     }
 
     @FXML
     void handleAvvistamenti(ActionEvent event) {
-
+    	model.creaGrafo(this.boxAnno.getValue().getAnno());
+    	this.boxStato.getItems().addAll(model.getStatiAvvistamenti(this.boxAnno.getValue().getAnno()));
     }
 
     @FXML
@@ -48,6 +57,14 @@ public class UfoController {
         assert boxAnno != null : "fx:id=\"boxAnno\" was not injected: check your FXML file 'Ufo.fxml'.";
         assert boxStato != null : "fx:id=\"boxStato\" was not injected: check your FXML file 'Ufo.fxml'.";
         assert txtResult != null : "fx:id=\"txtResult\" was not injected: check your FXML file 'Ufo.fxml'.";
+        
 
     }
+
+	public void setModel(Model model) {
+		// TODO Auto-generated method stub
+		this.model=model;
+		this.boxAnno.getItems().addAll(model.getAnniAvvistamenti());
+		
+	}
 }

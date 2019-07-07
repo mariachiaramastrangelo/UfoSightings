@@ -1,5 +1,6 @@
 package it.polito.tdp.ufo;
 	
+import it.polito.tdp.ufo.model.Model;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -11,11 +12,17 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			BorderPane root = (BorderPane)FXMLLoader.load(getClass().getResource("Ufo.fxml"));
+			FXMLLoader loader= new FXMLLoader(getClass().getResource("Ufo.fxml"));
+			BorderPane root = (BorderPane)loader.load();
+
+			//BorderPane root = (BorderPane)FXMLLoader.load(getClass().getResource("Ufo.fxml"));
 			Scene scene = new Scene(root);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.show();
+			Model model= new Model();
+			UfoController controller= loader.getController();
+			controller.setModel(model);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
