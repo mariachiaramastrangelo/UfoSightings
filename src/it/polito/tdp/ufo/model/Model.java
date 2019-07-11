@@ -22,7 +22,7 @@ public class Model {
 	
 	public Model() {
 		dao= new SightingsDAO();
-		grafo= new SimpleDirectedGraph<>(DefaultEdge.class);
+		
 	}
 
 	public List<AnniAvvistamenti> getAnniAvvistamenti() {
@@ -30,11 +30,13 @@ public class Model {
 		return dao.anniAvvistamenti();
 	}
 	public List<StatiAvvistamenti> getStatiAvvistamenti(int anno) {
+		
 		// TODO Auto-generated method stub
 		return dao.statiAvvistamenti(anno);
 	}
 	
 	public void creaGrafo(int anno) {
+		grafo= new SimpleDirectedGraph<>(DefaultEdge.class);
 		Graphs.addAllVertices(grafo, dao.statiAvvistamenti(anno));
 		for(StatiAvvistamenti s1: grafo.vertexSet()) {
 			for(StatiAvvistamenti s2: grafo.vertexSet()) {
